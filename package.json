@@ -1,0 +1,22 @@
+{
+  "name": "viddy",
+  "version": "1.0.0",
+  "description": "Video web-app using MERN statck",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ConnorCIngram/Viddy.git"
+  },
+  "keywords": [
+    "MERN"
+  ],
+  "author": "Connor Ingram",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ConnorCIngram/Viddy/issues"
+  },
+  "homepage": "https://github.com/ConnorCIngram/Viddy#readme"
+}
