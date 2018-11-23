@@ -11,9 +11,13 @@ var UserSchema = new Schema({
     },
     email: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
-    uploads: [{ type: Schema.Types.ObjectId, ref: 'Video' }],
-    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment', default: [] }]
+    uploads: [{ type: Schema.Types.ObjectId, ref: 'Video', default: [] }],
+    comments: [ { type: Schema.Types.ObjectId, ref: 'Comment', default: [], required: true } ]
 });
+
+/*
+    code below from https://www.mongodb.com/blog/post/password-authentication-with-mongoose-part-1
+*/
 
 // pasword hashing
 UserSchema.pre('save', function(next) {
@@ -42,7 +46,6 @@ UserSchema.path('email').validate(function (email) {
     var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     return emailRegex.test(email); // Assuming email has a text attribute
  }, 'The e-mail field cannot be empty.');
-
 
 
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {

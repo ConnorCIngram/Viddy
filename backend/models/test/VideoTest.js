@@ -5,8 +5,7 @@ var mongoose = require('mongoose'),
     Video = require('../Video/VideoSchema')
     User = require('../User/UserScema'),
     Comment = require('../Comment/CommentSchema'),
-    createComment = require('../Utils/Utils').createComment,
-    removeComment = require('../Utils/Utils').removeComment;
+    Utils = require('../Utils/Utils');
 
 mongoose.Promise = global.Promise;
 
@@ -102,21 +101,21 @@ describe("Video", function() {
     });
     var CommentId;
     it ('should populate comments', function(done) {
-
-        createComment({
+        let c = new Comment({
             from_user: SampleUser._id,
             on_video: VideoId,
             body: "This video is so inspirational! <3"
-        }, (err, c) => {
-            CommentId = c._id;
-            Video.findOne({_id:VideoId}).populate('comments').exec((err, vid) => {
+        });
+        c.save(function(err, comment) {
+            if (err) done(err);
+            CommentId = comment._id;
+            Video.findOne({ _id: VideoId }).populate('comments').exec((err, vid) => {
                 if (err) done(err);
-                expect(vid).to.exist;
                 expect(vid.comments.length).to.equal(1);
                 expect(vid.comments[0].body).to.equal("This video is so inspirational! <3");
                 done();
             });
-        });
+        })
     });
 
     it ('should have updated video with comment id', function(done) {
@@ -139,41 +138,38 @@ describe("Video", function() {
     });
     var CommentId2;
     it ('should handle multiple comments correctly', function(done) {
-        createComment({
+        let c = new Comment({
             from_user: SampleUser._id,
             on_video: VideoId,
             body: "This is the second comment from me."
-        },(err, comment) => {
+        });
+        c.save(function(err, comment) {
+            if (err) done(err);
             CommentId2 = comment._id;
-            Video.findOne({_id: VideoId}, function(err, vid) {
+            Video.findOne({ _id: VideoId }, function(err, vid) {
                 if (err) done(err);
                 expect(vid.comments.length).to.equal(2);
+                expect(vid.comments[0].toString()).to.equal(CommentId.toString());
+                expect(vid.comments[1].toString()).to.equal(CommentId2.toString());
                 done();
-            })
-        })
-    });
-
-    it ('remove comment from db', function(done) {
-        removeComment(CommentId, function(err, comment) {
-            if (err) done(err);
-            Video.findOne({_id: VideoId}, (err, vid) => {
-                if (err) done(err);
-                expect(vid.comments.length).to.equal(1);
-                expect(vid.comments[0].toString()).to.equal(CommentId2.toString());
-                done();
-            })
+            });
         });
-    });
-    it ('remove comment2 from db', function(done) {
-        removeComment(CommentId2, done);
     });
     
-    it ('should remove from db', function(done) {
-        Video.findOneAndRemove({_id: VideoId}, function(err, v) {
-            if (err) done(err);
-            expect(v).to.exist;
-            done();
-        });
+    it ('should remove from db, expect comments to delete', function(done) {
+        Video.findOne({ _id: VideoId }, (err, vid) => {
+            Utils.removeVideo(vid, (err, results) => {
+                if (err) done(err);
+                expect(results).to.exist;
+                Comment.find({ on_video: VideoId }, (err, docs) => {
+                    if (err) done(err);
+                    expect(docs).to.exist;
+                    expect(docs).to.be.a('Array');
+                    expect(docs.length).to.equal(0);
+                    done();
+                });
+            })
+        })
     });
 
     after((done) => {

@@ -2,12 +2,16 @@ var expect = require('chai').expect,
     assert = require('chai').assert;
 
 var User = require('../User/UserScema'),
-    mongoose = require('mongoose');
+    Video = require('../Video/VideoSchema'),
+    mongoose = require('mongoose'),
+    async = require('async');
 
 // USER TESTING
 describe('user', function() {
     var SavedEmail = 'testing1@gmail.com';
     var SavedPassword = 'password123';
+    var UserId;
+    var CommentId;
     before( function(done) {
         mongoose.connect(
             'mongodb://localhost:27017/test', 
@@ -66,7 +70,11 @@ describe('user', function() {
             password: SavedPassword
             
         });
-        u.save(done)
+        u.save((err, user) => {
+            if (err) done(user);
+            UserId = user._id;
+            done();
+        })
     });
 
     it ('should had password after being saved', function(done) {
@@ -77,6 +85,36 @@ describe('user', function() {
                 done();
             })
         });
+    });
+    var VideoId;
+    it ('Create test video', function(done) {
+        let v = new Video({
+            title: 'User Test Video',
+            author: UserId
+        });
+        v.save((err, vid) => {
+            if (err) done(err);
+            expect(vid).to.exist;
+            VideoId = vid._id;
+            done();
+        });
+    });
+
+    it ('should update on comment save', function(done) {
+        let c = new Comment({
+            from_user: UserId,
+            on_video: VideoId,
+            body: "User Test Comment bleh blah zoop zap"
+        });
+        c.save((err, comment) => {
+            CommentId = comment._id;
+            User.findOne({_id: UserId}, function(err, user) {
+                if (err) done(err);
+                expect(user.comments.length).to.equal(1);
+                expect(user.comments[0].toString()).to.equal(CommentId.toString());
+                done();
+            })
+        });
     })
 
     it ('should delete from db', function(done) {
@@ -84,6 +122,17 @@ describe('user', function() {
     });
 
     after(function(done) {
-        mongoose.connection.close(done);
-    })
+        async.parallel([
+            function(callback) {
+                User.deleteMany({}, callback);
+            }, function(callback) {
+                Video.deleteMany({}, callback);
+            }, function(callback) {
+                Comment.deleteMany({}, callback);
+            }
+        ], function(err, results) {
+            if (err) throw err;
+            mongoose.connection.close(done);
+        });
+    });
 });
