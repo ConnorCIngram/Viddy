@@ -30,6 +30,7 @@
     "chai": "^4.2.0",
     "concurrently": "^4.0.1",
     "cors": "^2.8.5",
+    "event-stream": "^3.3.4",
     "express": "^4.16.4",
     "g": "^2.0.1",
     "jsonwebtoken": "^8.4.0",
