@@ -11,7 +11,7 @@ router.use(bodyParser.json());
 
 // get one user by id
 router.get('/:id', function(req, res, next) {
-    User.findById(req.params.id, (err, user) => {
+    User.findById(req.params.id, {password: 0}, (err, user) => {
         if (err) next(err);
         res.send(user);
     });
