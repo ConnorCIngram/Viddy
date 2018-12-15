@@ -1,0 +1,25 @@
+@import '../../../_index.scss';
+
+.ChangeProfileInfo {
+  padding-top: 0.5rem;
+  .ContainerHeader {
+    @include ContainerHeader();
+  }
+  .Container {
+    @include Container();
+    padding: 0.5rem;
+    padding-bottom: 1rem;
+    form {
+      width: 100%;
+      text-align: center;
+      input {
+        @include input-field();
+        width: 80%;
+      }
+      input[type='submit'] {
+        @include button();
+        width: 100%;
+      }
+    }
+  }
+}

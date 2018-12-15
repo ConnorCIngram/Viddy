@@ -6,6 +6,17 @@ $secondary-color: #0288d1;
 $secondary-light: #5eb8ff;
 $secondary-dark: #005b9f;
 
+$success: #00c07f;
+$failure: #ff6562;
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+$font-stack: 'Open Sans', sans-serif;
+$font-color: rgba(black, 0.8);
+$font-size: 1rem;
+
+$border-size: 3px;
+$border-color: rgba(black, 0.3);
+
 /* Meida query mixins */
 @mixin for-phone-only {
   @media (max-width: 599px) { @content; }
@@ -21,4 +32,114 @@ $secondary-dark: #005b9f;
 }
 @mixin for-big-desktop-up {
   @media (min-width: 1800px) { @content; }
+}
+
+@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow:inset $top $left $blur $color;
+    -moz-box-shadow:inset $top $left $blur $color;
+    box-shadow:inset $top $left $blur $color;
+  } @else {
+    -webkit-box-shadow: $top $left $blur $color;
+    -moz-box-shadow: $top $left $blur $color;
+    box-shadow: $top $left $blur $color;
+  }
+}
+
+@mixin input-field() {
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: $border-size $border-size;
+  border: none;
+  background-color: $primary-color;
+  color: $font-color;
+  font-weight: lighter;
+  outline: none;
+  box-sizing: border-box;
+  border-bottom: $border-size - 1px solid $border-color;
+  &:hover, &:focus {
+    background-color: $primary-light;
+  }
+  &:hover {
+    border-color: $secondary-color;
+  }
+  &:focus {
+    border-color: $secondary-light;
+  }
+}
+@mixin input-field-password() {
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: $border-size $border-size;
+  border: none;
+  background-color: $primary-color;
+  color: $font-color;
+  font-weight: lighter;
+  outline: none;
+  border-bottom: $border-size - 1px solid $border-color;
+  &:hover, &:focus {
+    background-color: $primary-light;
+  }
+  &:hover {
+    border-color: $secondary-color;
+  }
+  &:focus {
+    border-color: $secondary-light;
+  }
+}
+
+@mixin button() {
+  -webkit-appearance: none;
+  border-radius: $border-size $border-size;
+  background-color: $secondary-color;
+  color: $primary-color;
+  border: none;
+  outline: none;
+  border-bottom: $border-size solid $border-color;
+  // border-top
+  width: 140px;
+  margin-top: 0.8rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.83rem;
+  font-weight: bold;
+  &:hover {
+    background-color: $secondary-dark;
+    color: rgba(white, 0.9);
+    cursor: pointer;
+  }
+  &:active {
+    border-bottom: $border-size - 1px solid $border-color;
+    transform: translateY(1px);
+    border-top: 1px solid transparent;
+  }
+
+  @include for-phone-only {
+    font-weight: bold;
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+  }
+}
+
+@mixin ContainerHeader() {
+  color: rgba(black, 0.62);
+  font-weight: bolder;
+  background-color: $secondary-light;
+  padding: 0.5rem 1rem;
+  border-radius: $border-size $border-size 0 0;
+  border-bottom: $border-size solid $border-color;
+  h4 {
+    margin: 0;
+  }
+}
+@mixin Container() {
+  display: flex;
+  border-bottom: $border-size solid $border-color;
+  border-radius: 0 0 $border-size $border-size;
+  background-color: $primary-color;
+}
+@mixin ErrorMessage() {
+  font-size: 0.6rem;
+  color: $failure;
 }

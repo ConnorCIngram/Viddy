@@ -1,0 +1,47 @@
+@import '../../_index.scss';
+
+.Profile {
+  padding: 0.5rem;
+  .ProfilePic {
+    background-color: black;
+    border-radius: 50%;
+    position: relative;
+    height: 100px;
+    width: 100px;
+    overflow: hidden;
+    img {
+      border-radius: inherit;
+      height: 100%;
+      width: 100%;
+      pointer-events: none;
+    }
+    .ProfilePicHover {
+      position: absolute;
+      bottom: 0;
+      height: 25px;
+      z-index: 3;
+      text-align: center;
+      width: 100%;
+      // color: $primary-color;
+      // background-color: rgba(black, 0.8);
+      color: $primary-color;
+      background-color: rgba($secondary-color, 0.8);
+      padding-top: 0.1rem;
+      padding-bottom: 0.4rem;
+      font-size: 1rem;
+      display: none;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    &:hover {
+      cursor: pointer;
+      .ProfilePicHover {
+        display: block;
+        visibility: visible;
+      }
+      img {
+        opacity: 0.8;
+      }
+    }
+  }
+}

@@ -9,10 +9,11 @@ var UserSchema = new Schema({
         firstname: String,
         lastname: String
     },
-    email: { type: String, required: true, index: { unique: true } },
+    email: { type: String, required: true, lowercase: true, index: { unique: true } },
     password: { type: String, required: true },
     uploads: [{ type: Schema.Types.ObjectId, ref: 'Video', default: [] }],
-    comments: [ { type: Schema.Types.ObjectId, ref: 'Comment', default: [], required: true } ]
+    comments: [ { type: Schema.Types.ObjectId, ref: 'Comment', default: [], required: true } ],
+    profilePicURL: {type: String, default: null}
 });
 
 /*
@@ -21,6 +22,7 @@ var UserSchema = new Schema({
 
 // pasword hashing
 UserSchema.pre('save', function(next) {
+    console.log("PRE SAVE HOOK");
     var user = this;
 
     // only hash the password if it has been modified (or is new)
@@ -40,6 +42,7 @@ UserSchema.pre('save', function(next) {
         });
     });
 });
+
 
 // validate email
 UserSchema.path('email').validate(function (email) {

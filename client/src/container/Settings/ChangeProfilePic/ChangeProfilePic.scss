@@ -1,0 +1,122 @@
+@import '../../../_index.scss';
+.ChangeProfilePic {
+    
+  padding-top: 0.5rem;
+  font-weight: lighter;
+  
+  .ContainerHeader {
+    @include ContainerHeader();
+  }
+  .Container {
+    @include Container();
+    flex-flow: wrap;
+  }
+  .ProfilePicThumbnail {
+    justify-content: flex-start;
+    align-self: center;
+    flex: 1;
+    order: 1;
+    display: flex;
+    // padding: 0.5rem;
+    margin: 0.5rem;
+    margin-bottom: 0;
+    max-width: 200px;
+    position: relative;  
+    .ProfilePicContainer {
+      min-width: 33% !important;
+      pointer-events: none;
+      img {       
+        height: auto;
+        border: $border-size solid $border-color;
+        border-radius: $border-size $border-size;
+        width: 100%;    
+      }
+    }
+    .ProfilePicHover {
+      position: absolute;
+      bottom: 0.6rem;
+      height: 25px;
+      z-index: 3;
+      text-align: center;
+      width: 100%;
+      color: $primary-color;
+      // background-color: rgba(black, 0.8);
+      background-color: rgba($secondary-color, 0.8);
+      margin-left: $border-size;
+      padding-top: 0.1rem;
+      padding-bottom: 0.4rem;
+      font-size: 1rem;
+      display: none;
+      visibility: hidden;
+      // pointer-events: none;
+      cursor: pointer;
+    }
+    &:hover {
+      .ProfilePicHover {
+        display: block;
+        visibility: visible;
+      }
+    }
+  }
+  .Form {
+    order: 2;
+    display: flex;
+    flex: 2;
+    max-width: 67%;
+    padding: 0.5rem;
+    padding-bottom: 0;
+    align-items: center;
+    justify-content: center;
+      form {
+        width: 100%;
+        input[type=file] {
+          width: 0.1px;
+          height: 0.1px;
+          opacity: 0;
+          overflow: hidden;
+          position: absolute;
+          z-index: -1;
+        }
+        label#fileInput {
+          height: 27px;
+          display: inline-block;
+          text-align: center;
+          width: 100% !important;
+          @include button();
+          margin-top: 0 !important;
+          padding-top: 0.5rem !important;
+          padding-bottom: 0.5rem !important;
+          background-color: $secondary-light;
+          
+          &:hover {
+            background-color: $secondary-color;
+          }
+          #left {
+            float: left;
+            padding-left: 1rem;
+            padding-right: 0.5rem;
+          }
+          #labelVal {
+            padding-top: 0.3rem;
+            padding-right: 1rem;
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: lighter !important;
+          }
+        }
+        input {
+          @include button();
+          width: 100%;
+        }
+      }
+  }
+  .Error {
+    order: 3;
+    width: 100%;
+    @include ErrorMessage();
+    padding: 0.5rem;
+    padding-top: 0.2rem;
+    text-align: center;
+  }
+}

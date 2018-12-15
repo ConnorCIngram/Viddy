@@ -1,87 +1,62 @@
 import React, { Component } from 'react';
-const axios = require('axios');
+import ErrorOutline from '@material-ui/icons/ErrorOutline';
+import InputFieldPassword from '../../components/Reusables/InputFieldPassword/InputFieldPassword';
+import InputField from '../../components/Reusables/InputField/InputField';
 
-function reset() {
-  localStorage.removeItem('token');
-  console.log(localStorage.getItem('token'));
-}
+require('./Login.scss');
+var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
-      password: '',
-      msg: ''
+      password: ''
     }
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
-    
   }
   componentDidMount() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // user has saved token in browser
-      axios.get('/api/auth', {headers: {'x-access-token': token}})
-        .then(res => { this.setState({msg: "Logged in as " + res.data.name.firstname + ' ' + res.data.name.lastname}) })
-        .catch(err => console.log({err}))
-    }
+    document.getElementById('submit').addEventListener('touchend', (e) => {
+      e.target.style.backgroundColor = "#0288d1";
+    });
   }
   handleSubmit(e) {
     e.preventDefault();
-    const email = this.state.email,
-          password = this.state.password;
-    localStorage.removeItem('token');
-    if (email && password) {
-      axios.post('/api/auth', { email: email, password: password })
-        .then(res => {
-          console.log(res);
-          if (res.data.auth) {
-            // token = res.data.token;
-            localStorage.setItem('token', res.data.token);
-            console.log(res.data.token);
-          }
-        })
-        .then(res => {
-          axios.get('/api/auth', {headers: {'x-access-token': localStorage.getItem('token')}})
-            .then(res => {
-              this.setState({ msg: "Logged in as " + res.data.name.firstname + ' ' + res.data.name.lastname });
-            })
-            .catch(err => this.setState({msg: 'Cannot authenticate'}));
-        })
-        .catch(err => {
-          this.setState({msg: "Username or password is incorrect" });
-        })
-    }
+    this.props.dispatchLogin(this.state.email, this.state.password);
   }
   
-  handleEmailChange(e) {
-    this.setState({ email: e.target.value });
-  }
-  handlePasswordChange(e) {
-    this.setState({ password: e.target.value });
+  handleChange = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    this.setState({ [name]: value }, () => {
+      if (name === 'email') {
+        if (emailRegex.test(value) && value !== '') {
+          document.getElementById('emailInput').style.borderColor = '#00c07f';
+        } else {
+          document.getElementById('emailInput').style.borderColor = '#ff6562';
+        }
+      }
+    });
   }
   render() {
     return (
-      <div className='Login'>LOGIN:
-        <form onSubmit={this.handleSubmit}>
+      <div className='Login'>
+      Please Login
+        <form method="POST" onSubmit={this.handleSubmit}>
+          <div className="Error">
+            {this.props.errorMessage}
+          </div>
           <label>
-            Email:
-            <input type="text" name="email" onChange={this.handleEmailChange} />
+            <InputField type="email" name="email" id='emailInput' placeholder={"email"} onChange={this.handleChange} />
           </label>
-          <br />
           <label>
-            Password:
-            <input type="text" name="password" onChange={this.handlePasswordChange} />
+            <InputFieldPassword placeholder={"password"} name="password" onChange={this.handleChange} />
           </label>
-          <br />
-          <input type="submit" value="Submit" />
+          <input id='submit' type="submit" value="Login" />
         </form>
-        <button onClick={reset}>Reset</button>
+        <a id='register' href='/register'>Register</a>
         <br />
-        {this.state.msg && <p>{this.state.msg}</p>}
       </div>
     );
   }

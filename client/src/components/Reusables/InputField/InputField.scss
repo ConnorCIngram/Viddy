@@ -1,0 +1,10 @@
+@import '../../../_index.scss';
+
+.InputField {
+  margin: 0;
+  padding: 0;
+  input {
+    @include input-field();
+    width: 100%;
+  }
+}

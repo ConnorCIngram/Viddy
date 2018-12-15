@@ -1,12 +1,7 @@
 @import '../../_index.scss';
 .Home {
-    padding-top: 96px;
     background-color: $primary-color;
     height: 100vh;
     width: 100vw;
     text-align: center;
-
-    @include for-phone-only {
-        padding-top: 64px;
-    }
 }

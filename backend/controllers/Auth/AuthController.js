@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const verifyToken = require('./VerifyToken');
+const qs = require('qs');
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
@@ -26,23 +27,66 @@ router.post('/', function(req, res) {
   });
 });
 
+// updates a user
+router.put('/', verifyToken, function(req, res) {
+  User.findByIdAndUpdate(req.userId, qs.parse(req.body), function(err, user) {
+    console.log(err, user);
+    if (err) res.sendStatus(204);
+    if (user) {
+      res.sendStatus(200);
+    } else res.sendStatus(404);
+  });
+});
+
+router.put('/password', verifyToken, function(req, res) {
+  console.log(req.body);
+  User.findById(req.userId, (err, user) => {
+    console.log(err, user);
+    if (err) return res.sendStatus(404).end();
+    user.comparePassword(req.body.password, (err, isMatch) => {
+      console.log(err, isMatch);
+      if (err) return res.sendStatus(500).end();
+      if (!isMatch) return res.sendStatus(401).end();
+      // password matched, update user with new password
+      user.password = req.body.newPassword;
+      user.save((err) => {
+        if (err) return res.sendStatus(500);
+        return res.sendStatus(200);
+      });
+    });
+  })
+});
+
 // get a user from the request token header
 router.get('/', verifyToken, function(req, res, next) {
   User.findById(req.userId, {password: 0}, function (err, user) {
       if (err) return res.status(500).send("There was a problem finding the user.");
       if (!user) return res.status(404).send("No user found.");
       res.status(200).send(user);
+      next();
   });
 });
 
 // Create and save new user, return auth token if valid
 router.post('/register', function(req, res, next) {
   console.log(req.body);
-  User.create(req.body, (err, user) => {
+  console.log(req.body['name[firstname]']);
+  if (req.body['name[firstname]']) {
+    user = {
+      email: req.body.email,
+      password: req.body.password,
+      name: {
+        firstname: req.body['name[firstname]'],
+        lastname: req.body['name[lastname]']
+      }
+    }
+  } else user = req.body;
+  User.create(user, (err, user) => {
       if (err) {
           if (err.code === 11000) {
               // MongoError, duplicate key
-              res.status(409).send('Email already in use');
+              return res.status(409).send('Email already in use');
+              
           } else {
               next(err);
           }

@@ -1,0 +1,41 @@
+@import '../../_index.scss';
+.Login {
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  // width: 50%;
+  background-color: $primary-color;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 6rem; /* 2rem past navbar */
+  margin-bottom: 2rem;
+  border-radius: 5px 5px;
+  color: $secondary-color;
+  font-weight: bolder;
+  // @include box-shadow(2px,2px,0px,rgba(0,0,0,0.1));
+  border-top: $border-size solid $border-color;
+  border-bottom: $border-size solid $border-color;
+  font-family: $font-stack;
+
+  form {
+    width: 160px;
+    margin-left: auto;
+    margin-right: auto;
+    #submit {
+      @include button();
+    }
+  }
+  a {
+    @include button();
+    background-color: $secondary-dark;
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .Error {
+    @include ErrorMessage();
+    padding: 0.5rem;
+    border-radius: $border-size $border-size;
+  }
+}

@@ -1,0 +1,114 @@
+@import '../../_index.scss';
+.Navbar {
+  z-index: 5;
+  background-color: $primary-color;
+  width: 100vw;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  height: 5rem;
+
+  .Icon {
+    display: inline-flex;
+  }
+  .injected-svg{
+    height: 5rem;
+    width: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    fill: $secondary-color;
+    transition: 0.2s;
+  }
+  .MenuIcon {
+    fill: rgba($secondary-light, 1);
+    height: 3rem;
+    width: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    transition: height 0.2s;
+    border-radius: 50%;
+    &:hover,
+    &:active {
+      opacity: 0.8;
+      cursor: pointer;
+    }
+  }
+
+  .NavMenu {
+    background-color: $secondary-dark;
+    position: fixed;
+    top: 6rem;
+    bottom: 0;
+    transition: 0.2s;
+    // padding: 1rem;
+    padding-top: 0;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+    text-align: left;
+    width: 100%;
+    button, a {
+      all: none;
+      -webkit-appearance: none;
+      text-decoration: none;
+      outline: none;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: $primary-color;
+      font-weight: bold;
+      border-bottom: 2px solid rgba(white, 0.1);
+      font-size: 1rem;
+      padding: 0.5rem;
+      padding-right: 1rem;
+      padding-left: 1rem;
+      font-size: 1.3rem;
+      width: 100%;
+      border-left: 2px solid transparent;
+      margin-bottom: 0.5rem;
+      display: flex;
+      left: 0;
+      &:hover {
+        color: $primary-light;
+      }
+    }
+    button.Active, a.Active {
+      background-color: $secondary-light;
+      border-left: 2px solid rgba($primary-color, 1);
+      border-bottom: 2px solid transparent;
+    }
+    // button.Active, a.Active {
+    //   background-color: $secondary-light;
+    // }
+    @include for-phone-only {
+      top: 4.2rem;
+    }
+  }
+  .NavMenu.Active {
+    opacity: 1;
+    padding-top: 1.5rem;
+    pointer-events: auto;
+  }
+
+  @include for-phone-only {
+    height: 3rem;
+    
+    .injected-svg {
+      height: 3rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+    .MenuIcon {
+      height: 2rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;      
+    }
+  }
+}
